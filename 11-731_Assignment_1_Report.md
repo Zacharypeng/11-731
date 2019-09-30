@@ -1,6 +1,6 @@
 
 # Report for 11-731 Assignment 1
-by zeyupeng@cs.cmu.edu
+by zeyupeng@cs.cmu.edu, [Github Repo](https://github.com/Zacharypeng/11-731.git)
 
 `nmt.py` it's a program to translate German to English. 
 
@@ -28,7 +28,7 @@ When Decoding and test, the model uses greedy search, which means that it will c
 
 ## Result and Analysis
 
-For the given validation and test dataset, this model reaches **BLEU score of 25.91** on validation dataset, and **BLEU score of 24.47** on the test dataset. The output result stores in the valid_output.txt and the test_output.txt. The training log is in the training_log.txt. Definitely should try Beam Search for future experiments. 
+For the given validation and test dataset, this model reaches **BLEU score of 25.91** on validation dataset, and **BLEU score of 24.47** on the test dataset. The output result stores in the dev.txt and the test.txt. The training log is in the training_log.txt. Definitely should try Beam Search for future experiments. 
 
 ## Experiments
 
@@ -56,12 +56,21 @@ I used the batch size of 256, learning rate of 1e-3 for training. Embedding size
 
 For taining
 ```bash
-python nmt.py train --train-src=data/train.de-en.de.wmixerprep --train-tgt=data/train.de-en.en.wmixerprep --dev-src=data/valid.de-en.de.wmixerprep --dev-tgt=data/valid.de-en.en.wmixerprep --vocab=data/vocab.bin --lr=1e-3 --lr-decay=0.5 --batch-size=256 --save-to='model.pt' --valid-niter=800 --patience=2 --max-num-trial=5
+python nmt.py train --train-src=data/train.de-en.de.wmixerprep \
+                    --train-tgt=data/train.de-en.en.wmixerprep \ 
+                    --dev-src=data/valid.de-en.de.wmixerprep \ 
+                    --dev-tgt=data/valid.de-en.en.wmixerprep \ 
+                    --vocab=data/vocab.bin \ 
+                    --lr=1e-3 --lr-decay=0.5 --batch-size=256 \ 
+                    --save-to='model.pt' --valid-niter=800 \
+                    --patience=2 --max-num-trial=5
 ```
 
 For testing
 ```bash
-python nmt.py decode model_2.pt data/test.de-en.de.wmixerprep data/test.de-en.en.wmixerprep test_output.txt
+python nmt.py decode model_2.pt data/test.de-en.de.wmixerprep \
+                                data/test.de-en.en.wmixerprep \ 
+                                test_output.txt
 ```
 
 ## References
