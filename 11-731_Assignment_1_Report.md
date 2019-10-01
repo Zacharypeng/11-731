@@ -28,17 +28,32 @@ When Decoding and test, the model uses greedy search, which means that it will c
 
 ## Result and Analysis
 
-For the given validation and test dataset, this model reaches **BLEU score of 25.91** on validation dataset, and **BLEU score of 24.47** on the test dataset. The output result stores in the dev.txt and the test.txt. The training log is in the training_log.txt. Definitely should try Beam Search for future experiments. 
+For the given validation and test dataset, adding teacher forcing and initializing model parameters greatly improve performance.  
+
+#### With teacher forcing mechanism and uniform initialization [-0.1, 0.1]
+
+**Validation BLEU: 27.506** 
+
+**Test BLEU: 25.749**  
+
+#### Without using teacher forcing and uniform initialization
+**Validation BLEU: 25.91**
+
+**Test BLEU: 24.47**
 
 ## Experiments
 
 ### Decoder LSTM initial state
 
-If the Decoder LSTM's initial state were set to zeros, the model will stuck around training loss of 90 and barly improved from there. But after passing the output hidden state from encoder's LSTM to the decoder LSTM initial state, the performance for this model increased greatly. 
+If the Decoder LSTM's initial state were set to zeros, the model will stuck around training loss of 90 and barely improved from there. But after passing the output hidden state from encoder's LSTM to the decoder LSTM initial state, the performance for this model increased greatly. 
 
 ### Teacher forcing
 
-Adding teacher forcing in the decoder while training, improved the performance of the model. The validation perplexity of the model using teacher forcing went below 16. Whereas it stayed above 18 without using teacher forcing. This model was trained with the teacher forcing rate of 0.1, where 10% of the training the LSTM get the last generated value as input and 90% of the training the LSTM get the ground truth as input. 
+Adding teacher forcing in the decoder while training, improved the performance of the model. The validation perplexity of the model using teacher forcing went below 16. Whereas it stayed above 18 without using teacher forcing. This model was trained with the teacher forcing rate of 0.1, where 10% of the training the LSTM get the last generated value as input and 90% of the training the LSTM get the ground truth as input.
+
+### Add model parameter initialization
+
+After using uniform initialization [-0.1, +0.1] for all parameters, the model performance had noticeable improvement. 
 
 ### MLP vs Linear
 
@@ -50,7 +65,7 @@ In the paper, the model used one layer of LSTM cell in decoder. However, I got s
 
 ## Hyperparameters
 
-I used the batch size of 256, learning rate of 1e-3 for training. Embedding size for both encoder and decoder are 256. Hidden size for both encoder LSTM and decoder LSTM are 256. Tearcher forcing rate was set to 0.1. 
+I used the batch size of 256, learning rate of 1e-3 for training. Embedding size for both encoder and decoder are 256. Hidden size for both encoder LSTM and decoder LSTM are 256. Teacher forcing rate was set to 0.1. 
 
 ## Basic Usage
 
@@ -76,5 +91,5 @@ python nmt.py decode model_2.pt data/test.de-en.de.wmixerprep \
 ## References
 * [Luong et al., 2015](https://arxiv.org/pdf/1508.04025.pdf)
 
-* Idea from my assignment for 11-785 Deep Learning, where I used Pyramid Bi-directinoal LSTM for speech recognition
+* Idea from my assignment for 11-785 Deep Learning, where I used Pyramid Bi-direction LSTM for speech recognition
 
